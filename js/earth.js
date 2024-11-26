@@ -13,8 +13,7 @@ function preload() {
     earthNoWater = loadImage("images/earth-no-water.png");
     earthNoLand = loadImage("images/earth-no-land.png");
     earthNoLife = loadImage("images/earth-no-life.png");
-    earthImg = loadImage("images/earth.png");
-
+    earthImg = loadImage("images/earth.PNG");
     airObject = loadImage("images/air.png");
     waterObject = loadImage("images/water.png");
     landObject = loadImage("images/land.png");
