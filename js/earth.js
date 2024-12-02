@@ -196,4 +196,18 @@ function star(x, y, radius1, radius2, npoints) {
 
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
+
+    for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+        p.x = random(width);
+        p.y = random(height);
+    }
+
+    airObject.x = width * 0.7;
+    airObject.y = height * 0.5;
+    airObject.size = width * 0.1;
+
+    // waterObject = new DraggableObject(waterObject, width * 0.7, height * 0.5, width * 0.1, false);
+    // landObject = new DraggableObject(landObject, width * 0.7, height * 0.5, width * 0.1, false);
+    // lifeObject = new DraggableObject(lifeObject, width * 0.7, height * 0.5, width * 0.1, false);
 }
