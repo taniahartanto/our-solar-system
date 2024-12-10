@@ -38,7 +38,7 @@ function setup() {
 }
 
 function draw() {
-    background(0, 7, 111);
+    background(2, 7, 82);
 
     // Draw stars
     for (let i = 0; i < particles.length; i++) {
@@ -207,7 +207,28 @@ function windowResized() {
     airObject.y = height * 0.5;
     airObject.size = width * 0.1;
 
-    // waterObject = new DraggableObject(waterObject, width * 0.7, height * 0.5, width * 0.1, false);
-    // landObject = new DraggableObject(landObject, width * 0.7, height * 0.5, width * 0.1, false);
-    // lifeObject = new DraggableObject(lifeObject, width * 0.7, height * 0.5, width * 0.1, false);
+    waterObject.x = width * 0.7;
+    waterObject.y = height * 0.5;
+    waterObject.size = width * 0.1;
+
+    landObject.x = width * 0.7;
+    landObject.y = height * 0.5;
+    landObject.size = width * 0.1;
+
+    lifeObject.x = width * 0.7;
+    lifeObject.y = height * 0.5;
+    lifeObject.size = width * 0.1;
+
 }
+
+document.body.addEventListener('keydown', function (event) {
+    event.preventDefault();
+});
+
+document.querySelector('button').addEventListener('keydown', function (event) {
+    event.stopPropagation();
+});
+
+document.querySelector('#text-box').addEventListener('keydown', function (event) {
+    event.stopPropagation();
+});

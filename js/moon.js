@@ -1,104 +1,85 @@
 let font;
-let basketball, baseball, golfball;
-let earthOrbitAngle = 0;
-let earthRotationAngle = 0;
-let moonOrbitAngle = 0;
-let earthOrbitRadius = 200;
-let moonOrbitRadius = 50;
-let basketsun, baseearth, golfmoon;
-
-// Sun (Basketball), Earth (Baseball), and Moon (Golf Ball) sizes
-let sunDiameter = 200;  // Sun (Basketball) size
-let earthDiameter = 80; // Earth (Baseball) size
-let moonDiameter = 30;  // Moon (Golf Ball) size
-
-let NUM_OF_PARTICLES = 300; // Number of stars
-let particles = [];
+let earthImg, moonImg, humanImg, astronautImg;
 
 function preload() {
     font = loadFont("fonts/ComicNeue-Bold.ttf");
-    basketball = loadImage("images/basketball.png");
-    baseball = loadImage("images/baseball.png");
-    golfball = loadImage("images/golfball.png");
-    basketsun = loadImage("images/basketsun.png");
-    baseearth = loadImage("images/baseearth.png");
-    golfmoon = loadImage("images/golfmoon.png");
+    earthImg = loadImage("images/earthlandscape.png");
+    moonImg = loadImage("images/moonlandscape.png");
+    humanImg = loadImage("images/human.png");
+    astronautImg = loadImage("images/astronaut.png");
 }
+
+let NUM_OF_PARTICLES = 300;
+let particles = [];
+
+let humanY, humanVelocity, humanAcceleration;
+let astronautY, astronautVelocity, astronautAcceleration;
 
 function setup() {
     let cnv = createCanvas(windowWidth, windowHeight);
     cnv.parent("canvas-container");
-
-    imageMode(CENTER);
-
     for (let i = 0; i < NUM_OF_PARTICLES; i++) {
         particles.push(new Particle(random(width), random(height)));
     }
+
+    humanY = height * 0.73;
+    humanVelocity = 0;
+    humanAcceleration = 0.4;
+
+    astronautY = height * 0.73;
+    astronautVelocity = 0;
+    astronautAcceleration = 0.1;
 }
 
 function draw() {
-    background(0, 7, 111);
+    background(2, 7, 82);
 
-    // Display particles (stars)
     for (let i = 0; i < particles.length; i++) {
         let p = particles[i];
         p.display();
     }
 
-    // Calculate positions for Sun, Earth, and Moon
-    let sunX = width * 0.35;
-    let sunY = height / 2;
-    let earthX = sunX + earthOrbitRadius * cos(earthOrbitAngle);
-    let earthY = sunY + earthOrbitRadius * sin(earthOrbitAngle);
-    let moonX = earthX + moonOrbitRadius * cos(moonOrbitAngle);
-    let moonY = earthY + moonOrbitRadius * sin(moonOrbitAngle);
+    push();
+    imageMode(CORNER);
+    // Earth and Moon images scaled to half the canvas width
+    image(earthImg, 0, 0, width / 2, height);
+    image(moonImg, width / 2, 0, width / 2, height * 0.95);
+    pop();
 
-    // Draw orbit lines
-    stroke(255, 100); // Orbit lines color (white with some transparency)
-    noFill();
+    // Update human position with velocity and acceleration
+    humanVelocity += humanAcceleration;
+    humanY += humanVelocity;
 
-    // Earth's orbit (around the Sun)
-    ellipse(sunX, sunY, earthOrbitRadius * 2, earthOrbitRadius * 2);
+    if (humanY > height * 0.73) {
+        humanY = height * 0.73;
+        humanVelocity = 0;
+    }
 
-    // Moon's orbit (around the Earth)
-    ellipse(earthX, earthY, moonOrbitRadius * 2, moonOrbitRadius * 2);
+    // Update astronaut position with velocity and acceleration
+    astronautVelocity += astronautAcceleration;
+    astronautY += astronautVelocity;
 
-    // Draw the Sun (Basketball) in orbit
-    image(basketball, sunX, sunY, sunDiameter, sunDiameter);
+    if (astronautY > height * 0.73) {
+        astronautY = height * 0.73;
+        astronautVelocity = 0;
+    }
 
-    // Draw the Earth (Baseball) in orbit with rotation
-    push(); // Save the current transformation matrix
-    translate(earthX, earthY); // Move to the Earth's position
-    rotate(earthRotationAngle); // Rotate the Earth
-    image(baseball, 0, 0, earthDiameter, earthDiameter); // Draw Earth at the rotated position
-    pop(); // Restore the original transformation matrix
+    push();
+    imageMode(CENTER);
 
-    // Draw the Moon (Golf Ball) in orbit
-    image(golfball, moonX, moonY, moonDiameter, moonDiameter);
+    // Human image scaled based on width of canvas
+    let humanWidth = width * 0.23;
+    let humanHeight = humanWidth * (humanImg.height / humanImg.width);
+    image(humanImg, width * 0.27, humanY, humanWidth, humanHeight);
 
-    // Update the orbit angles
-    earthOrbitAngle += 0.01; // Speed of Earth's orbit around the Sun
-    moonOrbitAngle += 0.03; // Speed of Moon's orbit around the Earth
-    earthRotationAngle += 0.05; // Speed of Earth's rotation around its own axis
+    // Astronaut image scaled based on width of canvas
+    let astronautWidth = width * 0.2;
+    let astronautHeight = astronautWidth * (astronautImg.height / astronautImg.width);
+    image(astronautImg, width * 0.73, astronautY, astronautWidth, astronautHeight);
 
-    // Draw the static Sun (basketsun)
-    let sunWidth = width * 0.2;
-    let sunHeight = sunWidth * (basketsun.height / basketsun.width);
-    image(basketsun, width * 0.67, height * 0.35, sunWidth, sunHeight);
-
-    // Draw the static Earth (baseearth)
-    let earthWidth = width * 0.2; // Slightly smaller than the Sun
-    let earthHeight = earthWidth * (baseearth.height / baseearth.width);
-    image(baseearth, width * 0.65, height * 0.5, earthWidth, earthHeight);
-
-    // Draw the static Moon (golfmoon)
-    let moonWidth = width * 0.2; // Smaller than the Earth
-    let moonHeight = moonWidth * (golfmoon.height / golfmoon.width);
-    image(golfmoon, width * 0.65, height * 0.65, moonWidth, moonHeight);
+    pop();
 }
 
-
-// Particle class for stars
 class Particle {
     constructor(x, y) {
         this.x = x;
@@ -117,7 +98,10 @@ class Particle {
         rotate(PI / 4);
         rectMode(CENTER);
 
-        let oscillatingDia = this.baseDia + sin(frameCount * this.oscillationSpeed + this.timeOffset) * (this.baseDia / 2);
+        let oscillatingDia =
+            this.baseDia +
+            sin(frameCount * this.oscillationSpeed + this.timeOffset) *
+            (this.baseDia / 2);
         star(0, 0, oscillatingDia / 2, oscillatingDia, 5);
         pop();
     }
@@ -140,4 +124,34 @@ function star(x, y, radius1, radius2, npoints) {
 
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
+
+    // Re-position particles and adjust image sizes on window resize
+    for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+        p.x = random(width);
+        p.y = random(height);
+    }
 }
+
+function keyPressed() {
+    if (key === ' ') {
+        if (humanY === height * 0.73) {
+            humanVelocity = -10;
+        }
+        if (astronautY === height * 0.73) {
+            astronautVelocity = -8;
+        }
+    }
+}
+
+document.body.addEventListener('keydown', function (event) {
+    event.preventDefault();
+});
+
+document.querySelector('button').addEventListener('keydown', function (event) {
+    event.stopPropagation();
+});
+
+document.querySelector('#text-box').addEventListener('keydown', function (event) {
+    event.stopPropagation();
+});

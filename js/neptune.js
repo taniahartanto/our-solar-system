@@ -1,53 +1,65 @@
 let font;
+let NUM_OF_PARTICLES = 300;
+let particles = [];
+let neptuneImg, neptunePoofImg, poofSound;
+
+let neptuneX, neptuneY;
+let neptuneCurrentImg;
+let neptuneClicked = false;
+
 function preload() {
     font = loadFont("fonts/ComicNeue-Bold.ttf");
+    neptuneImg = loadImage("images/neptune.PNG");
+    neptunePoofImg = loadImage("images/neptune-poof.png");
+    poofSound = loadSound("sound/poof-sound-effect.mp3");
 }
 
-let particles = [];
 function setup() {
-
     let cnv = createCanvas(windowWidth, windowHeight);
     cnv.parent("canvas-container");
+    imageMode(CENTER);
+    neptuneX = width / 2;
+    neptuneY = height * 0.55;
+    neptuneCurrentImg = neptuneImg;
+    for (let i = 0; i < NUM_OF_PARTICLES; i++) {
+        particles.push(new Particle(random(width), random(height)));
+    }
 }
 
 function draw() {
-    background(0, 7, 111);
-
-    //generate stars
-    if (mouseIsPressed) {
-        particles.push(new Particle(mouseX, mouseY, random(1, 15)));
-        particles.push(new Particle(mouseX, mouseY, random(1, 15)));
-        particles.push(new Particle(mouseX, mouseY, random(1, 15)));
-    }
-
+    background(2, 7, 82);
     for (let i = 0; i < particles.length; i++) {
         let p = particles[i];
-        p.move();
         p.display();
     }
+    let neptuneWidth = width * 0.35;
+    let neptuneHeight = neptuneWidth * (neptuneImg.height / neptuneImg.width);
+    if (neptuneCurrentImg) {
+        image(neptuneCurrentImg, neptuneX, neptuneY, neptuneWidth, neptuneHeight);
+    }
+}
 
+function mousePressed() {
+    let d = dist(mouseX, mouseY, neptuneX, neptuneY);
+    let neptuneWidth = width * 0.35;
+    if (d < (neptuneWidth / 2) && !neptuneClicked) {
+        neptuneCurrentImg = neptunePoofImg;
+        neptuneClicked = true;
+        if (!poofSound.isPlaying()) {
+            poofSound.play();
+        }
+    }
 }
 
 class Particle {
-    constructor(startX, startY, startDia) {
-        this.x = startX;
-        this.y = startY;
-        this.xSpeed = random(-5, 5);
-        this.ySpeed = random(-5, 5);
-        this.dia = startDia;
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.baseDia = random(1, 8);
+        this.oscillationSpeed = random(0.01, 0.07);
+        this.timeOffset = random(TWO_PI);
     }
-    move() {
-        this.x += this.xSpeed;
-        this.y += this.ySpeed;
-    }
-    checkEdges() {
-        if (this.x < 0 || this.x > width) {
-            this.isDone = true;
-        }
-        if (this.y < 0 || this.y > height) {
-            this.isDone = true;
-        }
-    }
+
     display() {
         push();
         noStroke();
@@ -56,10 +68,12 @@ class Particle {
         translate(this.x, this.y);
         rotate(PI / 4);
         rectMode(CENTER);
-        star(0, 0, this.dia / 2, this.dia, 5);
+        let oscillatingDia = this.baseDia + sin(frameCount * this.oscillationSpeed + this.timeOffset) * (this.baseDia / 2);
+        star(0, 0, oscillatingDia / 2, oscillatingDia, 5);
         pop();
     }
 }
+
 function star(x, y, radius1, radius2, npoints) {
     let angle = TWO_PI / npoints;
     let halfAngle = angle / 2.0;
@@ -74,3 +88,26 @@ function star(x, y, radius1, radius2, npoints) {
     }
     endShape(CLOSE);
 }
+
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+    neptuneX = width / 2;
+    neptuneY = height / 2;
+    for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+        p.x = random(width);
+        p.y = random(height);
+    }
+}
+
+document.body.addEventListener('keydown', function (event) {
+    event.preventDefault();
+});
+
+document.querySelector('button').addEventListener('keydown', function (event) {
+    event.stopPropagation();
+});
+
+document.querySelector('#text-box').addEventListener('keydown', function (event) {
+    event.stopPropagation();
+});

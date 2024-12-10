@@ -1,53 +1,83 @@
-let font;
+let jupiterImg, stormImg;
+let jupiterX, jupiterY, jupiterWidth, jupiterHeight;
+let stormX, stormY, stormWidth, stormHeight;
+let NUM_OF_PARTICLES = 300;
+let particles = [];
+let stormVisible = false;
+let jupiterTargetY;
+
 function preload() {
+    jupiterImg = loadImage("images/jupiter.PNG");
+    stormImg = loadImage("images/storm.gif");
     font = loadFont("fonts/ComicNeue-Bold.ttf");
 }
 
-let particles = [];
 function setup() {
-
     let cnv = createCanvas(windowWidth, windowHeight);
     cnv.parent("canvas-container");
+    imageMode(CENTER);
+
+    for (let i = 0; i < NUM_OF_PARTICLES; i++) {
+        particles.push(new Particle(random(width), random(height)));
+    }
+
+    updateImagePositionsAndSizes();
 }
 
 function draw() {
-    background(0, 7, 111);
-
-    //generate stars
-    if (mouseIsPressed) {
-        particles.push(new Particle(mouseX, mouseY, random(1, 15)));
-        particles.push(new Particle(mouseX, mouseY, random(1, 15)));
-        particles.push(new Particle(mouseX, mouseY, random(1, 15)));
-    }
+    background(2, 7, 82);
 
     for (let i = 0; i < particles.length; i++) {
         let p = particles[i];
-        p.move();
         p.display();
     }
 
+    let distanceToJupiter = dist(mouseX, mouseY, jupiterX, jupiterY);
+    if (distanceToJupiter < jupiterWidth / 2) {
+        stormVisible = true;
+        jupiterTargetY = height * 0.6;
+    } else {
+        stormVisible = false;
+        jupiterTargetY = height / 2;
+    }
+
+    jupiterY = lerp(jupiterY, jupiterTargetY, 0.05);
+
+    image(jupiterImg, jupiterX, jupiterY, jupiterWidth, jupiterHeight);
+
+    if (stormVisible) {
+        image(stormImg, stormX, stormY, stormWidth, stormHeight);
+    }
+}
+
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+    updateImagePositionsAndSizes();
+}
+
+function updateImagePositionsAndSizes() {
+    let sizeFactor = min(width, height) / 1000;
+
+    jupiterX = width / 2;
+    jupiterY = height / 2;
+    jupiterWidth = jupiterImg.width * 0.9 * sizeFactor;
+    jupiterHeight = jupiterWidth * (jupiterImg.height / jupiterImg.width);
+
+    stormX = width / 2;
+    stormY = height * 0.3;
+    stormWidth = stormImg.width * 0.6 * sizeFactor;
+    stormHeight = stormWidth * (stormImg.height / stormImg.width);
 }
 
 class Particle {
-    constructor(startX, startY, startDia) {
-        this.x = startX;
-        this.y = startY;
-        this.xSpeed = random(-5, 5);
-        this.ySpeed = random(-5, 5);
-        this.dia = startDia;
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.baseDia = random(1, 8);
+        this.oscillationSpeed = random(0.01, 0.07);
+        this.timeOffset = random(TWO_PI);
     }
-    move() {
-        this.x += this.xSpeed;
-        this.y += this.ySpeed;
-    }
-    checkEdges() {
-        if (this.x < 0 || this.x > width) {
-            this.isDone = true;
-        }
-        if (this.y < 0 || this.y > height) {
-            this.isDone = true;
-        }
-    }
+
     display() {
         push();
         noStroke();
@@ -56,10 +86,13 @@ class Particle {
         translate(this.x, this.y);
         rotate(PI / 4);
         rectMode(CENTER);
-        star(0, 0, this.dia / 2, this.dia, 5);
+
+        let oscillatingDia = this.baseDia + sin(frameCount * this.oscillationSpeed + this.timeOffset) * (this.baseDia / 2);
+        star(0, 0, oscillatingDia / 2, oscillatingDia, 5);
         pop();
     }
 }
+
 function star(x, y, radius1, radius2, npoints) {
     let angle = TWO_PI / npoints;
     let halfAngle = angle / 2.0;
@@ -74,3 +107,15 @@ function star(x, y, radius1, radius2, npoints) {
     }
     endShape(CLOSE);
 }
+
+document.body.addEventListener('keydown', function (event) {
+    event.preventDefault();
+});
+
+document.querySelector('button').addEventListener('keydown', function (event) {
+    event.stopPropagation();
+});
+
+document.querySelector('#text-box').addEventListener('keydown', function (event) {
+    event.stopPropagation();
+});

@@ -1,11 +1,11 @@
 let font;
 let darkSun, lightBulb, lightSun, fire, finalSun;
-let currentState = "dark"; // States: "dark", "light", "fire"
+let currentState = "dark";
 
-let lightBulbObject, fireObject; // Draggable objects
+let lightBulbObject, fireObject;
 let selectedObject = null;
 
-let NUM_OF_PARTICLES = 300; // Number of stars
+let NUM_OF_PARTICLES = 300;
 let particles = [];
 
 function preload() {
@@ -22,25 +22,22 @@ function setup() {
     cnv.parent("canvas-container");
     imageMode(CENTER);
 
-    // Initialize stars
     for (let i = 0; i < NUM_OF_PARTICLES; i++) {
         particles.push(new Particle(random(width), random(height)));
     }
 
-    // Initialize draggable objects
     lightBulbObject = new DraggableObject(lightBulb, width * 0.3, height * 0.5, width * 0.1, true);
     fireObject = new DraggableObject(fire, width * 0.7, height * 0.5, width * 0.1, false);
 }
 
 function draw() {
-    background(0, 7, 111);
+    background(2, 7, 82);
 
     for (let i = 0; i < particles.length; i++) {
         let p = particles[i];
         p.display();
     }
 
-    // Display sun based on the current state
     if (currentState === "dark") {
         image(darkSun, width / 2, height / 2, width * 0.23, width * 0.23);
     } else if (currentState === "light") {
@@ -49,13 +46,11 @@ function draw() {
         image(finalSun, width / 2, height / 2, width * 0.4, width * 0.4);
     }
 
-    // Display draggable objects if visible
     if (lightBulbObject.isVisible) lightBulbObject.display();
     if (fireObject.isVisible) fireObject.display();
 }
 
 function mousePressed() {
-    // Check if an object is clicked for dragging
     if (lightBulbObject.isVisible && lightBulbObject.isMouseOver()) {
         selectedObject = lightBulbObject;
     } else if (fireObject.isVisible && fireObject.isMouseOver()) {
@@ -64,7 +59,6 @@ function mousePressed() {
 }
 
 function mouseDragged() {
-    // Drag the selected object
     if (selectedObject) {
         selectedObject.x = mouseX;
         selectedObject.y = mouseY;
@@ -73,32 +67,29 @@ function mouseDragged() {
 
 function mouseReleased() {
     if (selectedObject) {
-        // Check for interactions when dragging ends
         if (currentState === "dark" && selectedObject === lightBulbObject) {
             if (isOverlapping(selectedObject.x, selectedObject.y, width / 2, height / 2, width * 0.4)) {
-                currentState = "light"; // Transition to lightSun state
-                lightBulbObject.isVisible = false; // Hide light bulb
-                fireObject.isVisible = true; // Show fire
+                currentState = "light";
+                lightBulbObject.isVisible = false;
+                fireObject.isVisible = true;
             }
         } else if (currentState === "light" && selectedObject === fireObject) {
             if (isOverlapping(selectedObject.x, selectedObject.y, width / 2, height / 2, width * 0.4)) {
-                currentState = "fire"; // Transition to finalSun state
-                fireObject.isVisible = false; // Hide fire
+                currentState = "fire";
+                fireObject.isVisible = false;
             }
         }
-        selectedObject = null; // Deselect after release
+        selectedObject = null;
     }
 }
 
-// Handle resizing of objects with the mouse wheel
 function mouseWheel(event) {
     if (selectedObject) {
-        selectedObject.size += event.delta * -0.001; // Scale size change
-        selectedObject.size = constrain(selectedObject.size, width * 0.05, width * 0.5); // Limit scaling
+        selectedObject.size += event.delta * -0.001;
+        selectedObject.size = constrain(selectedObject.size, width * 0.05, width * 0.5);
     }
 }
 
-// Check if an object overlaps the sun
 function isOverlapping(objX, objY, targetX, targetY, targetSize) {
     let distX = abs(objX - targetX);
     let distY = abs(objY - targetY);
@@ -111,7 +102,7 @@ class DraggableObject {
         this.x = x;
         this.y = y;
         this.size = size;
-        this.isVisible = isVisible; // Controls visibility of the object
+        this.isVisible = isVisible;
     }
 
     display() {
@@ -169,4 +160,30 @@ function star(x, y, radius1, radius2, npoints) {
 
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
+
+    for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+        p.x = random(width);
+        p.y = random(height);
+    }
+
+    lightBulbObject.x = width * 0.3;
+    lightBulbObject.y = height * 0.5;
+    lightBulbObject.size = width * 0.1;
+
+    fireObject.x = width * 0.7;
+    fireObject.y = height * 0.5;
+    fireObject.size = width * 0.1;
 }
+
+document.body.addEventListener('keydown', function (event) {
+    event.preventDefault();
+});
+
+document.querySelector('button').addEventListener('keydown', function (event) {
+    event.stopPropagation();
+});
+
+document.querySelector('#text-box').addEventListener('keydown', function (event) {
+    event.stopPropagation();
+});

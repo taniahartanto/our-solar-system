@@ -2,23 +2,23 @@ let img12;
 
 function preload() {
     font = loadFont("fonts/ComicNeue-Bold.ttf");
-    img12 = loadImage("images/milkyway.PNG"); // Ensure the file path is correct
+    img12 = loadImage("images/milkyway.PNG");
 }
 
-let NUM_OF_PARTICLES = 600;
+let NUM_OF_PARTICLES = 300;
 let particles = [];
-let rotationAngle = 0; // Initialize rotation angle
+let rotationAngle = 0;
 
 function setup() {
     let cnv = createCanvas(windowWidth, windowHeight);
-    cnv.parent("canvas-container"); // Ensure canvas is attached to #canvas-container
+    cnv.parent("canvas-container");
     for (let i = 0; i < NUM_OF_PARTICLES; i++) {
         particles.push(new Particle(random(width), random(height)));
     }
 }
 
 function draw() {
-    background(0, 7, 111);
+    background(2, 7, 82);
 
     for (let i = 0; i < particles.length; i++) {
         let p = particles[i];
@@ -27,34 +27,30 @@ function draw() {
 
     imageMode(CENTER);
 
-    // Milky Way (Rotating)
-    let centerX = width / 2; // Define centerX
-    let centerY = height / 2; // Define centerY
+    // Milky Way
+    let centerX = width / 2;
+    let centerY = height / 2;
     let milkywayWidth = width * 0.45;
     let milkywayHeight = milkywayWidth * (img12.height / img12.width);
 
-    push(); // Save current drawing state
-    translate(centerX, centerY); // Move to the center of the canvas
-    rotate(rotationAngle); // Apply rotation
-    image(img12, 0, 0, milkywayWidth, milkywayHeight); // Draw image at the rotated position
-    pop(); // Restore previous drawing state
+    push();
+    translate(centerX, centerY);
+    rotate(rotationAngle);
+    image(img12, 0, 0, milkywayWidth, milkywayHeight);
+    pop();
 
-    // Update rotation angle
-    rotationAngle -= 0.006; // Adjust the speed of rotation
-}
-
-function windowResized() {
-    resizeCanvas(windowWidth, windowHeight); // Adjust canvas size to match the new window dimensions
+    rotationAngle -= 0.006;
 }
 
 class Particle {
     constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.baseDia = random(1, 5); // Base diameter for oscillation
-        this.oscillationSpeed = random(0.01, 0.07); // Speed of oscillation
-        this.timeOffset = random(TWO_PI); // Randomize start phase
+        this.baseDia = random(1, 5);
+        this.oscillationSpeed = random(0.01, 0.07);
+        this.timeOffset = random(TWO_PI);
     }
+
     display() {
         push();
         noStroke();
@@ -64,7 +60,6 @@ class Particle {
         rotate(PI / 4);
         rectMode(CENTER);
 
-        // Oscillate the size
         let oscillatingDia =
             this.baseDia +
             sin(frameCount * this.oscillationSpeed + this.timeOffset) *
@@ -88,3 +83,25 @@ function star(x, y, radius1, radius2, npoints) {
     }
     endShape(CLOSE);
 }
+
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+
+    for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+        p.x = random(width);
+        p.y = random(height);
+    }
+}
+
+document.body.addEventListener('keydown', function (event) {
+    event.preventDefault();
+});
+
+document.querySelector('button').addEventListener('keydown', function (event) {
+    event.stopPropagation();
+});
+
+document.querySelector('#text-box').addEventListener('keydown', function (event) {
+    event.stopPropagation();
+});

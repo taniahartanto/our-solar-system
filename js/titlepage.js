@@ -39,7 +39,7 @@ function setup() {
 }
 
 function draw() {
-  background(0, 7, 111);
+  background(2, 7, 82);
 
   // Draw stars and other content
   for (let i = 0; i < particles.length; i++) {
@@ -48,10 +48,10 @@ function draw() {
   }
 
   // Title
-  let imgWidth = width * 0.6;
+  let imgWidth = width * 0.65;
   let imgHeight = imgWidth * (img11.height / img11.width);
   imageMode(CENTER);
-  image(img11, width * 0.5, height * 0.4, imgWidth, imgHeight);
+  image(img11, width * 0.5, height * 0.45, imgWidth, imgHeight);
 
   // Planet positions
   // Sun
@@ -105,10 +105,6 @@ function draw() {
   image(img9, width * 0.89, height * 0.47, neptuneWidth, neptuneHeight);
 }
 
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight); // Adjust canvas size to match the new window dimensions
-}
-
 
 class Particle {
   constructor(x, y) {
@@ -151,3 +147,25 @@ function star(x, y, radius1, radius2, npoints) {
   }
   endShape(CLOSE);
 }
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+
+  for (let i = 0; i < particles.length; i++) {
+    let p = particles[i];
+    p.x = random(width);
+    p.y = random(height);
+  }
+}
+
+document.body.addEventListener('keydown', function (event) {
+  event.preventDefault();
+});
+
+document.querySelector('button').addEventListener('keydown', function (event) {
+  event.stopPropagation();
+});
+
+document.querySelector('#text-box').addEventListener('keydown', function (event) {
+  event.stopPropagation();
+});

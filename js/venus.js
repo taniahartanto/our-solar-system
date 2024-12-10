@@ -30,7 +30,7 @@ function setup() {
 }
 
 function draw() {
-    background(0, 7, 111);
+    background(2, 7, 82);
 
     for (let i = 0; i < particles.length; i++) {
         let p = particles[i];
@@ -56,10 +56,6 @@ function draw() {
     let earthWidth = width * 0.7;
     let earthHeight = earthWidth * (earthImg.height / earthImg.width);
     image(earthImg, width * 0.7, height * 0.9, earthWidth, earthHeight);
-}
-
-function windowResized() {
-    resizeCanvas(windowWidth, windowHeight);
 }
 
 function updateVenusRotation() {
@@ -111,3 +107,25 @@ function star(x, y, radius1, radius2, npoints) {
     }
     endShape(CLOSE);
 }
+
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+
+    for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+        p.x = random(width);
+        p.y = random(height);
+    }
+}
+
+document.body.addEventListener('keydown', function (event) {
+    event.preventDefault();
+});
+
+document.querySelector('button').addEventListener('keydown', function (event) {
+    event.stopPropagation();
+});
+
+document.querySelector('#text-box').addEventListener('keydown', function (event) {
+    event.stopPropagation();
+});

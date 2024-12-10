@@ -4,41 +4,34 @@ body {
     padding: 0;
     background-color: black;
     overflow: hidden;
-    /* Prevent scrolling */
     height: 100%;
-    /* Ensure body and html take up the full height */
     display: flex;
-    /* Enable flexbox */
     justify-content: center;
-    /* Center content horizontally */
     align-items: center;
-    /* Center content vertically */
-
 }
 
 #canvas-container {
     border-radius: 50px;
-    /* Keep rounded corners */
     overflow: hidden;
-    /* Ensure content respects the rounded corners */
     width: 90%;
     height: 90vh;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: black;
-    /* Add a background color for the container */
-    cursor: url('../images/rocket.PNG') 32 32, pointer;
+    cursor: url('../images/rocket.PNG'), pointer;
 }
-
 
 @font-face {
-    font-family: ComicNeue-Bold;
-    src: url(ComicNeue-Bold.ttf);
+    font-family: 'ComicNeue-Bold';
+    src: url('.../fonts/ComicNeue-Bold.ttf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
 }
 
-
 button {
+    user-select: none;
+    caret-color: transparent;
     text-align: center;
     font-weight: bold;
     font-family: ComicNeue-Bold;
@@ -46,19 +39,20 @@ button {
     background-color: rgb(240, 193, 40);
     border: none;
     color: rgb(108, 34, 178);
-    cursor: url('../images/rocket.PNG') 32 32, pointer;
+    cursor: url('../images/rocket.PNG') 0 0, pointer;
     display: inline-block;
     border-radius: 30px;
     transition-duration: 0.4s;
 }
 
 .btn {
-    padding: 10px 20px;
+    /* title page */
+    padding: 8px 20px;
     font-size: 20px;
     margin: 4px 2px;
     position: fixed;
-    top: 63%;
-    left: 41%;
+    top: 65%;
+    left: 41.3%;
 }
 
 .btn:hover {
@@ -67,7 +61,8 @@ button {
 }
 
 .btn1 {
-    padding: 10px 20px;
+    /* back */
+    padding: 8px 20px;
     font-size: 20px;
     margin: 4px 2px;
     position: absolute;
@@ -81,12 +76,13 @@ button {
 }
 
 .btn2 {
-    padding: 10px 20px;
+    /* dive into the milky way */
+    padding: 8px 20px;
     font-size: 20px;
     margin: 4px 2px;
     position: absolute;
     top: 86%;
-    left: 76.5%;
+    left: 76.7%;
 }
 
 .btn2:hover {
@@ -95,13 +91,14 @@ button {
 }
 
 .btn3 {
-    padding: 10px 20px;
+    /* explore the solar system */
+    padding: 8px 20px;
     font-size: 20px;
     font-weight: bold;
     margin: 4px 2px;
     position: absolute;
     top: 86%;
-    left: 75.5%;
+    left: 75.7%;
 }
 
 .btn3:hover {
@@ -110,12 +107,13 @@ button {
 }
 
 .btn4 {
-    padding: 13px 25px;
+    /* create your own planet */
+    padding: 8px 20px;
     font-size: 20px;
     margin: 4px 2px;
     position: absolute;
-    top: 80%;
-    left: 40.5%;
+    top: 73%;
+    left: 41.3%;
 }
 
 .btn4:hover {
@@ -123,12 +121,139 @@ button {
     color: rgb(255, 255, 255);
 }
 
-#text-box {
-    background-color: brown;
+.btn5 {
+    /* next */
+    padding: 8px 20px;
+    font-size: 20px;
+    margin: 4px 2px;
     position: absolute;
-    left: 50%;
-    bottom: 15%;
-    width: 600px;
-    text-align: center;
+    top: 86%;
+    left: 87.3%;
+}
+
+.btn5:hover {
+    background-color: rgb(240, 153, 40);
+    color: rgb(255, 255, 255);
+}
+
+.btn6 {
+    /* custom */
+    padding: 8px 20px;
+    font-size: 20px;
+    margin: 4px 2px;
+    position: absolute;
+    top: 86%;
+    left: 82%;
+}
+
+.btn6:hover {
+    background-color: rgb(240, 153, 40);
+    color: rgb(255, 255, 255);
+}
+
+@font-face {
+    font-family: 'MyFont';
+    src: url('../fonts/ChildosArabicDEMO-Light.otf');
+}
+
+@font-face {
+    font-family: 'BobbyJones';
+    src: url('../fonts/BobbyJones-Soft.otf');
+}
+
+#text-container,
+input,
+textarea {
+    user-select: none;
+    caret-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
     transform: translate(-50%, -50%);
+    font-family: 'MyFont';
+    font-size: 2vw;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    cursor: url('../images/rocket.PNG'), pointer;
+    transition: text-shadow 0.3s ease;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), -2px -2px 4px rgba(0, 0, 0, 0.3), 2px -2px 4px rgba(0, 0, 0, 0.3), -2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* instructions */
+#text-container2,
+input,
+textarea {
+    user-select: none;
+    caret-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    font-family: 'MyFont';
+    font-size: 1.3vw;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    cursor: url('../images/rocket.PNG'), pointer;
+    transition: text-shadow 0.3s ease;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), -2px -2px 4px rgba(0, 0, 0, 0.3), 2px -2px 4px rgba(0, 0, 0, 0.3), -2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+#text-container3,
+input,
+textarea {
+    user-select: none;
+    caret-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    font-family: 'MyFont';
+    font-size: 1.5vw;
+    color: rgb(255, 255, 255);
+    text-align: left;
+    cursor: url('../images/rocket.PNG'), pointer;
+    transition: text-shadow 0.3s ease;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), -2px -2px 4px rgba(0, 0, 0, 0.3), 2px -2px 4px rgba(0, 0, 0, 0.3), -2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+#text-container4,
+input,
+textarea {
+    user-select: none;
+    caret-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    font-family: 'BobbyJones';
+    font-size: 4vw;
+    color: rgb(255, 255, 255);
+    text-align: left;
+    cursor: url('../images/rocket.PNG'), pointer;
+    transition: text-shadow 0.3s ease;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), -2px -2px 4px rgba(0, 0, 0, 0.3), 2px -2px 4px rgba(0, 0, 0, 0.3), -2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* venus */
+#text-container5,
+input,
+textarea {
+    user-select: none;
+    caret-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    font-family: 'MyFont';
+    font-size: 2vw;
+    color: rgb(255, 255, 255);
+    text-align: right;
+    cursor: url('../images/rocket.PNG'), pointer;
+    transition: text-shadow 0.3s ease;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), -2px -2px 4px rgba(0, 0, 0, 0.3), 2px -2px 4px rgba(0, 0, 0, 0.3), -2px 2px 4px rgba(0, 0, 0, 0.3);
 }
